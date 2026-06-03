@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Premium Task Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <style>
+    :root { 
+        --bg-dark: #0f172a; --text: #ffffff; --danger: #ef4444; 
+        --c-blue: #0d62ff; --c-red: #f80606; --c-green: #00aa00; --c-yellow: #ffde17; --safe-grey: #e2e8f0;
+    }
+    
+    /* ডার্ক ব্লু ও হোয়াইট থিম - গ্লোবাল */
+    body {
+      background: #0b1120; /* Deep Dark Blue */
+      color: #ffffff;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      padding: 15px;
+      margin: 0;
+      transition: background 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .container {
+      max-width: 420px;
+      margin: auto;
+      padding: 25px 20px;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+      border: 1px solid #1e3a8a;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50px; left: -50px;
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    h2, h3 { color: #60a5fa; text-align: center; margin-top: 0; position: relative; z-index: 1;}
+    
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: 1px solid #1e3a8a;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.4);
+      color: white;
+      font-size: 15px;
+      box-sizing: border-box;
+      transition: 0.3s;
+    }
+    input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 10px rgba(59,130,246,0.3); }
+    
+    button {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+    button.red-btn, .red-link-btn { 
+        display: block; width: 100%; text-align: center; text-decoration: none;
+        background: linear-gradient(45deg, #2563eb, #3b82f6); color: white; 
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); 
+    }
+    button.red-btn:hover, .red-link-btn:hover { box-shadow: 0 6px 20px rgba(59, 130, 246, 0.7); transform: translateY(-2px); }
+    button.dark-btn, .dark-link-btn { 
+        display: block; width: 100%; text-align: center; text-decoration: none;
+        background: rgba(30, 58, 138, 0.8); color: #93c5fd; border: 1px solid #3b82f6; 
+    }
+    button.dark-btn:hover, .dark-link-btn:hover { background: #3b82f6; color: white; }
+    
+    .dashboard-header {
+      text-align: center;
+      padding-bottom: 15px;
+      position: relative;
+      z-index: 1;
+    }
+    .user-greeting { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+    .ref-badge {
+      display: inline-block; background: rgba(59, 130, 246, 0.1); border: 1px solid #60a5fa; color: #93c5fd;
+      padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 5px; cursor: pointer;
+    }
+
+    .balance-box {
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      padding: 15px 10px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+    .balance-box p { margin: 0; color: #93c5fd; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .balance-box h1 { margin: 8px 0 0; color: #ffffff; font-size: 24px; text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3); }
+    
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      position: relative;
+      z-index: 1;
+    }
+    .action-item {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid #1e3a8a;
+      border-radius: 12px;
+      padding: 20px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .action-item:hover {
+      border-color: #3b82f6;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      background: linear-gradient(145deg, #1e3a8a, #0f172a);
+    }
+    .action-item .icon { font-size: 32px; display: block; margin-bottom: 10px; }
+    .action-item .text { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+    
+    .history-item { font-size: 14px; border-bottom: 1px solid #1e3a8a; padding: 10px 0; }
+
+    /* Ludo Matchmaking Grid */
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+      position: relative; z-index: 1;
+    }
+    .match-box {
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      border: 2px solid #3b82f6;
+      padding: 15px 5px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: inset 0 0 15px rgba(59,130,246,0.1), 0 4px 10px rgba(0,0,0,0.5);
+      transition: 0.2s;
+    }
+    .match-box:hover { transform: scale(1.05); border-color: #60a5fa; box-shadow: inset 0 0 15px rgba(96,165,250,0.3); }
+    .match-box .m-amount { font-size: 20px; font-weight: bold; color: #ffffff; display:block; }
+    .match-box .m-text { font-size: 12px; color: #93c5fd; }
+
+    /* Ludo Game Styles */
+    @keyframes diceShake {
+        0% { transform: rotate(0deg); } 25% { transform: rotate(15deg); }
+        50% { transform: rotate(-15deg); } 75% { transform: rotate(10deg); } 100% { transform: rotate(0deg); }
+    }
+    .board-wrapper {
+        width: 100%; aspect-ratio: 1/1; background: #fff; padding: 3px; border-radius: 4px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5); position: relative; margin: 0 auto 15px auto;
+    }
+    .ludo-board {
+        width: 100%; height: 100%; display: grid;
+        grid-template-columns: repeat(15, 1fr); grid-template-rows: repeat(15, 1fr);
+        background: #fff; border: 2px solid #000;
+    }
+    .cell {
+        width: 100%; height: 100%; border: 0.5px solid #000;
+        display: flex; justify-content: center; align-items: center; position: relative; margin: -0.5px;
+    }
+    .house { z-index: 2; border: 2px solid #000; position: relative; padding: 10%; }
+    .h-blue { grid-column: 1/7; grid-row: 1/7; background: var(--c-blue); }
+    .h-red { grid-column: 10/16; grid-row: 1/7; background: var(--c-red); }
+    .h-green { grid-column: 1/7; grid-row: 10/16; background: var(--c-green); }
+    .h-yellow { grid-column: 10/16; grid-row: 10/16; background: var(--c-yellow); }
+
+    .house-inner {
+        background: #fff; width: 100%; height: 100%; border-radius: 15%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+        display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+        gap: 10%; padding: 15%; box-sizing: border-box;
+        border: 1px solid #000;
+    }
+    .token-spot {
+        width: 100%; height: 100%; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1);
+        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3); position: relative;
+    }
+    .h-red .token-spot { background: var(--c-red); }
+    .h-green .token-spot { background: var(--c-green); }
+
+    .bg-red { background-color: var(--c-red); } .bg-green { background-color: var(--c-green); }
+    .bg-blue { background-color: var(--c-blue); } .bg-yellow { background-color: var(--c-yellow); }
+    .safe { background-color: var(--safe-grey); }
+    .star-icon { color: #888; font-size: 10px; position: absolute; z-index: 1; }
+    .start-cell i { color: #fff; opacity: 0.9; font-size: 12px; }
+
+    .center-home {
+        grid-column: 7/10; grid-row: 7/10; position: relative; background: #fff; border: 2px solid #000; overflow: hidden; z-index: 2;
+    }
+    .tri { position: absolute; width: 100%; height: 100%; }
+    .tri-top { background: var(--c-red); clip-path: polygon(0 0, 100% 0, 50% 50%); }
+    .tri-right { background: var(--c-yellow); clip-path: polygon(100% 0, 100% 100%, 50% 50%); }
+    .tri-bottom { background: var(--c-blue); clip-path: polygon(0 100%, 100% 100%, 50% 50%); }
+    .tri-left { background: var(--c-green); clip-path: polygon(0 0, 0 100%, 50% 50%); }
+    .crown-win { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: gold; font-size: 24px; z-index: 10; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
+
+    .puck {
+        width: 85%; height: 85%; border-radius: 50%; border: 2px solid #fff;
+        box-shadow: 0 4px 5px rgba(0,0,0,0.5), inset 0 -3px 5px rgba(0,0,0,0.2);
+        z-index: 10; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        transition: all 0.2s ease-in-out;
+    }
+    .pk-green { background: radial-gradient(circle at 35% 35%, #55efc4, #00b894); }
+    .pk-red { background: radial-gradient(circle at 35% 35%, #ff7675, #d63031); }
+
+    .ui-panel {
+        width: 100%; background: #1e293b; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; box-sizing: border-box;
+    }
+    .player-info { display: flex; flex-direction: column; align-items: center; color: #94a3b8; font-size: 12px; font-weight: bold; width: 70px; position: relative; transition: 0.3s; text-align: center; }
+    .avatar {
+        width: 48px; height: 48px; border-radius: 12px; background: #334155; margin-bottom: 5px;
+        border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; position: relative;
+    }
+    .active-p .avatar { border-color: #4ade80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.3); transform: scale(1.05); }
+    
+    .dice-wrap {
+        width: 70px; height: 70px; background: #fff; border-radius: 16px;
+        display: flex; align-items: center; justify-content: center; font-size: 35px; color: #000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: 0.1s; border: 4px solid #cbd5e1;
+    }
+    .dice-wrap:active { transform: scale(0.95); }
+    .shake-dice { animation: diceShake 0.3s infinite; }
+    .disabled-dice { opacity: 0.5; cursor: not-allowed; background: #e2e8f0; }
+
+    .timer-badge {
+        position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; background: var(--danger);
+        color: white; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center;
+        border: 2px solid #1e293b; font-weight: bold; z-index: 20;
+    }
+    .hidden { display: none !important; }
+
+  </style>
+</head>
+<body>
+
+<div class="container" id="authSection">
+  <h2>🔐 Premium Login</h2>
+  <input type="text" id="username" placeholder="Username"/>
+  <input type="text" id="phone" placeholder="Phone Number (017XXXXXX)"/>
+  <input type="password" id="password" placeholder="Password"/>
+  <input type="text" id="refCodeInput" placeholder="Referral Code (Optional)"/>
+  <button class="red-btn" onclick="register()">Create Account</button>
+  <button class="dark-btn" onclick="login()">Login to Dashboard</button>
+</div>
+
+<div class="container" id="mainDashboard" style="display:none">
+  <div class="dashboard-header">
+    <div class="user-greeting">👋 Hi, <span id="userName"></span></div>
+    <div class="ref-badge" onclick="alert('Share this code with your friends and earn bonus!')">
+       🔗 My Ref Code: <span id="myCodeDisplay">...</span>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:10px; margin-bottom:20px;">
+    <div class="balance-box" style="flex:1; margin-bottom:0;">
+      <p>Deposit Balance</p>
+      <h1>৳ <span id="depositBalance">0.00</span></h1>
+    </div>
+    <div class="balance-box" style="flex:1; margin-bottom:0;">
+      <p>Winning Balance</p>
+      <h1>৳ <span id="winningBalance">0.00</span></h1>
+    </div>
+  </div>
+
+  <div class="action-grid">
+    <div class="action-item" onclick="showMatchmakingPage()">
+      <span class="icon">🎲</span>
+      <span class="text">Play Ludo</span>
+    </div>
+    <div class="action-item" onclick="showLinksPage()">
+      <span class="icon">🔗</span>
+      <span class="text">Links & Video</span>
+    </div>
+    <div class="action-item" onclick="showDepositPage()">
+      <span class="icon">💵</span>
+      <span class="text">Deposit</span>
+    </div>
+    <div class="action-item" onclick="showWithdrawPage()">
+      <span class="icon">💸</span>
+      <span class="text">Withdraw</span>
+    </div>
+  </div>
+  
+  <button class="dark-btn" onclick="showHistoryPage()" style="margin-top: 20px;">📜 Transaction History</button>
+  <button class="dark-btn" onclick="logout()" style="margin-top: 10px; border-color:#555; color:#aaa;">🚪 Logout Account</button>
+</div>
+
+<div class="container" id="linksSection" style="display:none">
+  <h2>🔗 Important Links</h2>
+  <p style="text-align:center; color:#93c5fd; font-size:14px; margin-bottom: 20px;">Connect with us or watch tutorials</p>
+  
+  <a id="tgBtn" href="#" target="_blank" class="red-link-btn" style="padding: 14px; margin-bottom: 15px; border-radius: 10px; font-weight: bold;">
+      <i class="fab fa-telegram"></i> Join Our Telegram
+  </a>
+  <a id="vidBtn" href="#" target="_blank" class="dark-link-btn" style="padding: 14px; margin-bottom: 15px; border-radius: 10px; font-weight: bold;">
+      <i class="fab fa-youtube"></i> Watch Tutorial Video
+  </a>
+  
+  <button class="dark-btn" onclick="showMainDashboard()" style="margin-top:20px;">⬅ Back to Home</button>
+</div>
+
+<div class="container" id="matchmakingSection" style="display:none">
+  <h2>🎲 Find Player</h2>
+  <p style="text-align:center; color:#93c5fd; font-size:14px; margin-top:-5px;">Select Entry Fee to Play Ludo</p>
+  
+  <div class="match-grid">
+    <div class="match-box" onclick="startLudoMatch(10)">
+      <span class="m-amount">৳ 10</span><span class="m-text">Win ৳ 19</span>
+    </div>
+    <div class="match-box" onclick="startLudoMatch(20)">
+      <span class="m-amount">৳ 20</span><span class="m-text">Win ৳ 38</span>
+    </div>
+    <div class="match-box" onclick="startLudoMatch(30)">
+      <span class="m-amount">৳ 30</span><span class="m-text">Win ৳ 57</span>
+    </div>
+    <div class="match-box" onclick="startLudoMatch(50)">
+      <span class="m-amount">৳ 50</span><span class="m-text">Win ৳ 95</span>
+    </div>
+    <div class="match-box" onclick="startLudoMatch(100)">
+      <span class="m-amount">৳ 100</span><span class="m-text">Win ৳ 190</span>
+    </div>
+    <div class="match-box" onclick="startLudoMatch(500)">
+      <span class="m-amount">৳ 500</span><span class="m-text">Win ৳ 980</span>
+    </div>
+  </div>
+
+  <div id="findingPlayerMsg" style="display:none; text-align:center; margin-top:20px;">
+      <i class="fas fa-circle-notch fa-spin" style="color:#3b82f6; font-size: 24px;"></i>
+      <p style="color:#3b82f6; font-weight:bold; margin-top:10px;">Finding Opponent...</p>
+  </div>
+
+  <button class="dark-btn" onclick="showMainDashboard()" style="margin-top:20px;">⬅ Back to Home</button>
+</div>
+
+<div class="container" id="ludoGameSection" style="display:none; padding: 15px;">
+    <div style="text-align: center; margin-bottom: 10px; position: relative; z-index: 1;">
+        <h2 style="margin: 0; font-size: 20px;">Speed Ludo - ৳<span id="matchPrizeDisplay"></span> Win</h2>
+        <p style="margin: 2px 0 10px 0; font-size: 13px; color: #94a3b8;">You vs <span id="header-bot-name">Player</span></p>
+    </div>
+
+    <div class="board-wrapper">
+        <div class="ludo-board" id="board">
+            <div class="house h-blue"><div class="house-inner"></div></div>
+            <div class="house h-red"><div class="house-inner">
+                <div class="token-spot"><div class="puck pk-red"></div></div>
+                <div class="token-spot"><div class="puck pk-red"></div></div>
+                <div class="token-spot"><div class="puck pk-red"></div></div>
+                <div class="token-spot" id="r-base"></div>
+            </div></div>
+            <div class="house h-green"><div class="house-inner">
+                <div class="token-spot"><div class="puck pk-green"></div></div>
+                <div class="token-spot"><div class="puck pk-green"></div></div>
+                <div class="token-spot"><div class="puck pk-green"></div></div>
+                <div class="token-spot" id="g-base"></div>
+            </div></div>
+            <div class="house h-yellow"><div class="house-inner"></div></div>
+            <div class="center-home">
+                <div class="tri tri-top"></div><div class="tri tri-right"></div>
+                <div class="tri tri-bottom"></div><div class="tri tri-left"></div>
+                <i class="fas fa-crown crown-win"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-panel" style="position: relative; z-index: 1;">
+        <div class="player-info active-p" id="p1-area">
+            <div class="avatar" style="background:var(--c-green);">
+                <i class="fas fa-user"></i>
+                <div id="p1-timer" class="timer-badge hidden">5</div>
+            </div> YOU
+        </div>
+        <div class="dice-wrap" id="dice-box" onclick="humanRoll()">
+            <i class="fas fa-dice-three" id="dice-val"></i>
+        </div>
+        <div class="player-info" id="p2-area">
+            <div class="avatar" style="background:var(--c-red);">
+                <i class="fas fa-user"></i>
+                <div id="p2-timer" class="timer-badge hidden">5</div>
+            </div> <span id="bot-name-display">Player</span>
+        </div>
+    </div>
+    
+    <p style="text-align:center; font-size:14px; margin-top: 10px; font-weight: bold; position: relative; z-index: 1;" id="status-msg">Game Loading...</p>
+    
+    <button class="dark-btn" onclick="surrenderMatch()" style="margin-top: 15px; border-color:#ef4444; color:#ef4444;"><i class="fas fa-flag"></i> Surrender</button>
+</div>
+
+<div class="container" id="depositSection" style="display:none">
+  <h2>💵 Secure Deposit</h2>
+  <label style="color:#93c5fd; font-size:14px;">Send Money to Admin Bkash/Nagad:</label>
+  <div id="adminNumbers" style="background:#0b1120; padding:15px; border-radius:8px; margin:10px 0; color:#60a5fa; font-size:16px; font-weight:bold; text-align:center; border:1px dashed #3b82f6;">
+    Loading...
+  </div>
+  <input type="number" id="depositAmount" placeholder="Amount (৳)"/>
+  <input type="text" id="trxId" placeholder="Transaction ID"/>
+  <button class="red-btn" onclick="requestDeposit()">Submit Deposit</button>
+  <button class="dark-btn" onclick="showMainDashboard()">⬅ Back</button>
+</div>
+
+<div class="container" id="withdrawSection" style="display:none">
+  <h2>💸 Fast Withdraw</h2>
+  <p id="minWithdrawMsg" style="text-align:center; color:#ffffff; font-size:13px; margin-top:0;">Min Withdraw: ৳100</p>
+  <p style="text-align:center; color:#93c5fd; font-size:11px; margin-top:-5px; margin-bottom:15px;">(You can only withdraw from Winning Balance)</p>
+  <input type="number" id="withdrawAmount" placeholder="Amount (৳)"/>
+  <input type="text" id="userWalletAddress" placeholder="Bkash/Nagad Number"/>
+  <button class="red-btn" onclick="requestWithdrawal()">Submit Withdraw</button>
+  <button class="dark-btn" onclick="showMainDashboard()">⬅ Back</button>
+</div>
+
+<div class="container" id="historySection" style="display:none;">
+    <h2>📜 History</h2>
+    <div id="historyList" style="max-height:300px; overflow-y:auto; margin-top:15px;"></div>
+    <button class="dark-btn" onclick="showMainDashboard()" style="margin-top:20px;">⬅ Back</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyAoXdB29PjXYVgc3JPBlSAbN50WbhLui2E",
+  authDomain: "task-9682c.firebaseapp.com",
+  databaseURL: "https://task-9682c-default-rtdb.firebaseio.com",
+  projectId: "task-9682c",
+  storageBucket: "task-9682c.firebasestorage.app",
+  messagingSenderId: "940950374326",
+  appId: "1:940950374326:web:48a3b48a900374212ba317"
+};
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
+
+let currentUser = null;
+let userData = null;
+let minWithdrawLimit = 100;
+let cpuWinRate = 50; 
+
+db.ref("admin/settings").on("value", snap => {
+  const settings = snap.val();
+  if(settings) {
+    document.getElementById("adminNumbers").innerHTML = `Bkash: ${settings.bkash || '017...'}<br>Nagad: ${settings.nagad || '018...'}`;
+    minWithdrawLimit = settings.minWithdraw || 100;
+    document.getElementById("minWithdrawMsg").innerText = `Min Withdraw: ৳${minWithdrawLimit}`;
+    if(settings.telegramLink) document.getElementById("tgBtn").href = settings.telegramLink;
+    if(settings.videoLink) document.getElementById("vidBtn").href = settings.videoLink;
+    if(settings.cpuWinRate !== undefined) cpuWinRate = settings.cpuWinRate;
+  }
+});
+
+function hideAll() {
+  document.getElementById('authSection').style.display = 'none';
+  document.getElementById('mainDashboard').style.display = 'none';
+  document.getElementById('linksSection').style.display = 'none';
+  document.getElementById('depositSection').style.display = 'none';
+  document.getElementById('withdrawSection').style.display = 'none';
+  document.getElementById('historySection').style.display = 'none';
+  document.getElementById('matchmakingSection').style.display = 'none';
+  document.getElementById('ludoGameSection').style.display = 'none';
+  if(ludoTimerInt) clearInterval(ludoTimerInt);
+}
+
+function showMainDashboard() { hideAll(); document.getElementById('mainDashboard').style.display = 'block'; }
+function showMatchmakingPage() { 
+    hideAll(); 
+    document.getElementById('matchmakingSection').style.display = 'block'; 
+    const findingMsg = document.getElementById('findingPlayerMsg');
+    findingMsg.style.display = 'none';
+    findingMsg.innerHTML = `
+      <i class="fas fa-circle-notch fa-spin" style="color:#3b82f6; font-size: 24px;"></i>
+      <p style="color:#3b82f6; font-weight:bold; margin-top:10px;">Finding Opponent...</p>
+    `;
+}
+function showLinksPage() { hideAll(); document.getElementById('linksSection').style.display = 'block'; }
+function showDepositPage() { hideAll(); document.getElementById('depositSection').style.display = 'block'; }
+function showWithdrawPage() { hideAll(); document.getElementById('withdrawSection').style.display = 'block'; }
+function showHistoryPage() { hideAll(); document.getElementById('historySection').style.display = 'block'; loadHistory(); }
+
+function register() {
+  if(localStorage.getItem("device_registered") === "true") return alert("❌ একটি ফোনে একটি অ্যাকাউন্ট সম্ভব।");
+  const u = username.value.trim(), p = password.value, ph = phone.value.trim(), ref = refCodeInput.value.trim();
+  if (!u || !p || !ph) return alert("❗ সব তথ্য দিন।");
+  const email = u + "@app.com", myCode = ph.slice(-6);
+
+  firebase.auth().createUserWithEmailAndPassword(email, p).then(res => {
+    localStorage.setItem("device_registered", "true");
+    
+    // Create User Data (Including 20 Taka Bonus & Referral Count Limit Tracker)
+    db.ref("users/" + res.user.uid).set({ 
+        username: u, phone: ph, balance: 0, depositBalance: 20, winningBalance: 0,
+        myReferralCode: myCode, isBanned: false, referralCount: 0 
+    });
+    db.ref("history/" + res.user.uid).push({ type: "Sign Up Bonus", amount: 20, time: new Date().toLocaleString(), status: "Success" });
+    db.ref("referralCodes/" + myCode).set(res.user.uid);
+    
+    // Check and Handle Referral Bonus logic
+    if (ref) {
+        db.ref("referralCodes/" + ref).once("value").then(snap => {
+            const referrerUid = snap.val();
+            if (referrerUid) {
+                db.ref("users/" + referrerUid).once("value").then(userSnap => {
+                    const referrerData = userSnap.val();
+                    if (referrerData) {
+                        let refCount = referrerData.referralCount || 0;
+                        if (refCount < 3) {
+                            db.ref("users/" + referrerUid).update({
+                                depositBalance: (referrerData.depositBalance || 0) + 10,
+                                referralCount: refCount + 1
+                            });
+                            db.ref("history/" + referrerUid).push({ 
+                                type: "Referral Bonus", 
+                                amount: 10, 
+                                time: new Date().toLocaleString(), 
+                                status: "Success" 
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    alert("✅ সফল! আপনার কোড: " + myCode);
+  }).catch(e => alert(e.message));
+}
+
+function login() {
+  const email = username.value.trim() + "@app.com", p = password.value;
+  firebase.auth().signInWithEmailAndPassword(email, p).then(res => {
+    currentUser = res.user;
+    loadUser();
+  }).catch(e => alert(e.message));
+}
+
+function loadUser() {
+  db.ref("users/" + currentUser.uid).on("value", snap => {
+    userData = snap.val();
+    if (userData) {
+      if(userData.isBanned) { alert("🚫 আপনার অ্যাকাউন্ট ব্যান করা হয়েছে।"); logout(); return; }
+      document.getElementById("userName").innerText = userData.username;
+      document.getElementById("depositBalance").innerText = (userData.depositBalance || 0).toFixed(2);
+      document.getElementById("winningBalance").innerText = (userData.winningBalance || 0).toFixed(2);
+      document.getElementById("myCodeDisplay").innerText = userData.myReferralCode || "N/A";
+      
+      if(document.getElementById('authSection').style.display !== 'none' && document.getElementById('ludoGameSection').style.display === 'none' && document.getElementById('matchmakingSection').style.display === 'none') {
+          showMainDashboard();
+      }
+    }
+  });
+}
+
+function requestDeposit() {
+  const amt = parseFloat(depositAmount.value), trx = trxId.value;
+  if(amt > 0 && trx) {
+    db.ref("deposits").push({ userId: currentUser.uid, username: userData.username, amount: amt, trxId: trx, time: new Date().toLocaleString(), status: 'Pending' });
+    alert("✅ রিকুয়েস্ট পাঠানো হয়েছে।"); showMainDashboard();
+  }
+}
+
+function requestWithdrawal() {
+  const amt = parseFloat(withdrawAmount.value), num = userWalletAddress.value;
+  let winBal = userData.winningBalance || 0;
+  if(amt >= minWithdrawLimit && winBal >= amt) {
+    db.ref("users/" + currentUser.uid).update({ winningBalance: winBal - amt });
+    db.ref("withdrawals").push({ userId: currentUser.uid, username: userData.username, amount: amt, number: num, time: new Date().toLocaleString(), status: 'Pending' });
+    alert("✅ উইথড্র সফল!"); showMainDashboard();
+  } else {
+    alert("❌ আপনার উইনিং ব্যালেন্স কম অথবা আপনি মিনিমাম লিমিট মানেননি।");
+  }
+}
+
+function loadHistory() {
+  db.ref("history/" + currentUser.uid).once("value", snap => {
+    const list = document.getElementById("historyList"); list.innerHTML = "";
+    snap.forEach(child => {
+      const d = child.val();
+      list.innerHTML = `<div class="history-item"><b>${d.type}</b>: ৳${d.amount}<br><small>${d.time}</small></div>` + list.innerHTML;
+    });
+  });
+}
+
+function logout() { firebase.auth().signOut().then(() => location.reload()); }
+
+firebase.auth().onAuthStateChanged(user => { if(user) { currentUser = user; loadUser(); } });
+
+// ==========================================
+// LUDO GAME LOGIC 
+// ==========================================
+const botNames = ['সিয়াম', 'samiya', 'shifa', 'sadiya', 'akash', 'simanta', 'sayma', 'shakil', 'আশিক রহমান', 'gamer.bd', 'ff lover'];
+let currentBotName = "Player";
+let currentMatchAmount = 0;
+
+let audioCtx;
+function playSound(type) {
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    const now = audioCtx.currentTime;
+    
+    if (type === 'click') { 
+        osc.frequency.setValueAtTime(800, now); gain.gain.setValueAtTime(0.3, now); osc.start(); osc.stop(now + 0.05);
+    } else if (type === 'step') { 
+        osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.08);
+        gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0, now + 0.08); osc.start(); osc.stop(now + 0.08);
+    } else if (type === 'win') { 
+        [523, 659, 784, 1046].forEach((f, i) => {
+            let o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.connect(g); g.connect(audioCtx.destination); o.type = 'triangle'; o.frequency.value = f;
+            g.gain.setValueAtTime(0.2, now + i*0.15); g.gain.linearRampToValueAtTime(0, now + i*0.15 + 0.3);
+            o.start(now + i*0.15); o.stop(now + i*0.15 + 0.3);
+        });
+    }
+}
+
+const P = [[14,7],[13,7],[12,7],[11,7],[10,7],[9,6],[9,5],[9,4],[9,3],[9,2],[9,1],[8,1],[7,1],[7,2],[7,3],[7,4],[7,5],[7,6],[6,7],[5,7],[4,7],[3,7],[2,7],[1,7],[1,8],[1,9],[2,9],[3,9],[4,9],[5,9],[6,9],[7,10],[7,11],[7,12],[7,13],[7,14],[7,15],[8,15],[9,15],[9,14],[9,13],[9,12],[9,11],[9,10],[10,9],[11,9],[12,9],[13,9],[14,9],[15,9],[15,8],[15,7]];
+const GH = [[14,8],[13,8],[12,8],[11,8],[10,8]];
+const RH = [[2,8],[3,8],[4,8],[5,8],[6,8]];
+const safeSpots = [0, 8, 13, 21, 26, 34, 39, 47];
+
+let p1Pos = -1, p2Pos = -1, ludoTurn = 0, diceVal = 0, isMoving = false, consecSixes = 0;
+let ludoTimerInt = null, timeLeft = 5;
+let p1Misses = 0; // Missed turns tracker
+const diceIcons = ['fa-dice-one','fa-dice-two','fa-dice-three','fa-dice-four','fa-dice-five','fa-dice-six'];
+
+function buildLudoBoard() {
+    const b = document.getElementById('board');
+    for(let r=1; r<=15; r++){
+        for(let c=1; c<=15; c++){
+            if((r>=7 && r<=9) || (c>=7 && c<=9)) {
+                if(r>=7 && r<=9 && c>=7 && c<=9) continue;
+                let d = document.createElement('div');
+                d.className = 'cell'; d.style.gridRow = r; d.style.gridColumn = c;
+                d.id = `cell-${r}-${c}`; b.appendChild(d);
+            }
+        }
+    }
+    let applyStyle = (r, c, cls, html='') => {
+        let el = document.getElementById(`cell-${r}-${c}`);
+        if(el) { el.className += ' ' + cls; if(html) el.innerHTML = html; }
+    };
+
+    safeSpots.forEach(s => applyStyle(P[s][0], P[s][1], 'safe', '<i class="fas fa-star star-icon"></i>'));
+    applyStyle(14,7, 'bg-green start-cell', '<i class="fas fa-star star-icon" style="color:white;"></i>');
+    applyStyle(2,9, 'bg-red start-cell', '<i class="fas fa-star star-icon" style="color:white;"></i>');
+    applyStyle(7,2, 'bg-blue start-cell', '<i class="fas fa-star star-icon" style="color:white;"></i>');
+    applyStyle(9,14, 'bg-yellow start-cell', '<i class="fas fa-star star-icon" style="color:white;"></i>');
+
+    GH.forEach(p => applyStyle(p[0], p[1], 'bg-green'));
+    RH.forEach(p => applyStyle(p[0], p[1], 'bg-red'));
+    [[8,2],[8,3],[8,4],[8,5],[8,6]].forEach(p => applyStyle(p[0], p[1], 'bg-blue'));
+    [[8,10],[8,11],[8,12],[8,13],[8,14]].forEach(p => applyStyle(p[0], p[1], 'bg-yellow'));
+}
+
+function startLudoMatch(amount) {
+    let depBal = userData.depositBalance || 0;
+    let winBal = userData.winningBalance || 0;
+    
+    if((depBal + winBal) < amount) return alert("❌ আপনার একাউন্টে পর্যাপ্ত ব্যালেন্স নেই।");
+    
+    currentMatchAmount = amount;
+    document.getElementById('findingPlayerMsg').style.display = 'block';
+    document.getElementById('findingPlayerMsg').innerHTML = `
+        <i class="fas fa-circle-notch fa-spin" style="color:#3b82f6; font-size: 24px;"></i>
+        <p style="color:#3b82f6; font-weight:bold; margin-top:10px;">Finding Opponent...</p>
+    `;
+    
+    let newDep = depBal;
+    let newWin = winBal;
+    
+    if(newDep >= amount) {
+        newDep -= amount;
+    } else {
+        let rem = amount - newDep;
+        newDep = 0;
+        newWin -= rem;
+    }
+
+    db.ref("users/" + currentUser.uid).update({ depositBalance: newDep, winningBalance: newWin });
+    db.ref("history/" + currentUser.uid).push({ type: "Ludo Match Fee", amount: -amount, time: new Date().toLocaleString(), status: "Success" });
+
+    let findingTime = Math.floor(Math.random() * (6000 - 3000 + 1)) + 3000; // Fastened for realism
+
+    setTimeout(() => {
+        currentBotName = botNames[Math.floor(Math.random() * botNames.length)];
+        
+        document.getElementById('findingPlayerMsg').innerHTML = `
+            <i class="fas fa-check-circle" style="color:#3b82f6; font-size: 30px;"></i>
+            <p style="color:#ffffff; font-weight:bold; margin-top:10px;">Opponent Found: ${currentBotName}</p>
+            <p style="color:#93c5fd; font-size:12px; margin-top:5px;">Match starting...</p>
+        `;
+
+        setTimeout(() => {
+            document.getElementById('header-bot-name').innerText = currentBotName;
+            document.getElementById('bot-name-display').innerText = currentBotName;
+            
+            let adminFee = 0;
+            if(amount === 10) adminFee = 1;
+            else if(amount === 20) adminFee = 2;
+            else if(amount === 30) adminFee = 3;
+            else if(amount === 50) adminFee = 5;
+            else if(amount === 100) adminFee = 10;
+            else if(amount === 500) adminFee = 20;
+
+            let winPrize = (amount * 2) - adminFee;
+            document.getElementById('matchPrizeDisplay').innerText = winPrize;
+            
+            hideAll();
+            document.getElementById('ludoGameSection').style.display = 'block';
+            
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            
+            resetLudoGame();
+        }, 2000);
+
+    }, findingTime);
+}
+
+function surrenderMatch() {
+    if(confirm("আপনি কি নিশ্চিত? সারেন্ডার করলে আপনার এন্ট্রি ফি ফেরত পাবেন না!")) {
+        showMainDashboard();
+    }
+}
+
+function resetLudoGame() {
+    if(ludoTimerInt) clearInterval(ludoTimerInt);
+    p1Pos = -1; p2Pos = -1; ludoTurn = 0; isMoving = false; consecSixes = 0; p1Misses = 0;
+    document.getElementById('dice-val').className = "fas fa-dice-three";
+    renderTokens(); updateUI();
+}
+
+function startTimer() {
+    clearInterval(ludoTimerInt); timeLeft = 5; updateTimerUI();
+    ludoTimerInt = setInterval(() => {
+        timeLeft--; updateTimerUI();
+        if(timeLeft <= 0) {
+            clearInterval(ludoTimerInt);
+            if(ludoTurn === 0) {
+                p1Misses++;
+                playSound('click');
+                if(p1Misses >= 3) {
+                    endGameWithBotWin(true);
+                } else {
+                    nextTurn(); // Skip turn
+                }
+            } else {
+                nextTurn(); 
+            }
+        }
+    }, 1000);
+}
+
+function updateTimerUI() {
+    document.getElementById('p1-timer').className = ludoTurn === 0 ? 'timer-badge' : 'timer-badge hidden';
+    document.getElementById('p1-timer').innerText = timeLeft;
+    document.getElementById('p2-timer').className = ludoTurn === 1 ? 'timer-badge' : 'timer-badge hidden';
+    document.getElementById('p2-timer').innerText = timeLeft;
+}
+
+function updateUI() {
+    const msg = document.getElementById('status-msg'), dBox = document.getElementById('dice-box');
+    startTimer();
+    if(ludoTurn === 0) {
+        let warning = p1Misses > 0 ? `(Missed: ${p1Misses}/3)` : "";
+        msg.innerText = `আপনার চাল (Tap Dice) ${warning}`; msg.style.color = "#4ade80";
+        dBox.classList.remove('disabled-dice');
+        document.getElementById('p1-area').classList.add('active-p');
+        document.getElementById('p2-area').classList.remove('active-p');
+    } else {
+        msg.innerText = currentBotName + " চাল দিচ্ছে..."; msg.style.color = "#ef4444";
+        dBox.classList.add('disabled-dice');
+        document.getElementById('p1-area').classList.remove('active-p');
+        document.getElementById('p2-area').classList.add('active-p');
+        
+        let randomDelay = Math.floor(Math.random() * 2000) + 1000;
+        setTimeout(performRoll, randomDelay);
+    }
+}
+
+function humanRoll() { 
+    if(ludoTurn === 0 && !isMoving) {
+        performRoll(); 
+    }
+}
+
+function performRoll() {
+    clearInterval(ludoTimerInt); isMoving = true;
+    if(ludoTurn === 0) p1Misses = 0; // Reset miss counter when played
+
+    const dBox = document.getElementById('dice-box'), dIcon = document.getElementById('dice-val');
+    dBox.classList.add('shake-dice');
+    
+    let count = 0;
+    let anim = setInterval(() => {
+        dIcon.className = `fas ${diceIcons[Math.floor(Math.random()*6)]}`;
+        playSound('click'); count++;
+        if(count > 5) {
+            clearInterval(anim); dBox.classList.remove('shake-dice');
+            
+            if(ludoTurn === 1) { 
+                let chance = Math.random() * 100;
+                if(chance < cpuWinRate) {
+                    if(p2Pos === -1) diceVal = 6;
+                    else if(p2Pos > 49 && (56 - p2Pos) <= 6) diceVal = 56 - p2Pos; 
+                    else diceVal = Math.floor(Math.random() * 3) + 4; 
+                } else {
+                    diceVal = Math.floor(Math.random() * 6) + 1;
+                }
+            } else { 
+                diceVal = Math.floor(Math.random() * 6) + 1;
+            }
+
+            dIcon.className = `fas ${diceIcons[diceVal-1]}`;
+            evaluateMove();
+        }
+    }, 80);
+}
+
+function evaluateMove() {
+    let pos = ludoTurn === 0 ? p1Pos : p2Pos;
+    let canMove = (pos === -1 && diceVal === 6) || (pos > -1 && pos + diceVal <= 56);
+
+    if(!canMove) {
+        consecSixes = 0; setTimeout(nextTurn, 500);
+    } else {
+        setTimeout(autoMoveToken, 300);
+    }
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function autoMoveToken() {
+    let currentPos = ludoTurn === 0 ? p1Pos : p2Pos;
+    
+    if(currentPos === -1) {
+        currentPos = 0; playSound('step');
+        if(ludoTurn===0) p1Pos = currentPos; else p2Pos = currentPos;
+        renderTokens(); await sleep(300);
+    } else {
+        for(let i=1; i<=diceVal; i++) {
+            currentPos++; playSound('step');
+            if(ludoTurn===0) p1Pos = currentPos; else p2Pos = currentPos;
+            renderTokens(); await sleep(150);
+        }
+    }
+
+    if(currentPos === 56) {
+        playSound('win');
+        if(ludoTurn === 0) {
+            let adminFee = 0;
+            let amt = currentMatchAmount;
+            if(amt === 10) adminFee = 1;
+            else if(amt === 20) adminFee = 2;
+            else if(amt === 30) adminFee = 3;
+            else if(amt === 50) adminFee = 5;
+            else if(amt === 100) adminFee = 10;
+            else if(amt === 500) adminFee = 20;
+
+            let winPrize = (amt * 2) - adminFee;
+            let winBal = userData.winningBalance || 0;
+
+            db.ref("users/" + currentUser.uid).update({ winningBalance: winBal + winPrize });
+            db.ref("history/" + currentUser.uid).push({ type: "Ludo Win", amount: winPrize, time: new Date().toLocaleString(), status: "Success" });
+            alert("🎉 অভিনন্দন! আপনি ৳" + winPrize + " জিতেছেন।");
+            showMatchmakingPage();
+        } else {
+            endGameWithBotWin();
+        }
+        return;
+    }
+
+    if(currentPos < 51) {
+        let myAbs = ludoTurn === 0 ? p1Pos : (p2Pos > -1 ? (p2Pos + 26) % 52 : -1);
+        let enemyAbs = ludoTurn === 1 ? p1Pos : (p2Pos > -1 ? (p2Pos + 26) % 52 : -1);
+        
+        if(myAbs === enemyAbs && !safeSpots.includes(myAbs)) {
+            playSound('click');
+            if(ludoTurn === 0) p2Pos = -1; else p1Pos = -1;
+            renderTokens(); await sleep(400);
+            isMoving = false; updateUI(); 
+            return;
+        }
+    }
+
+    if(diceVal === 6) {
+        consecSixes++;
+        if(consecSixes >= 3) { consecSixes = 0; nextTurn(); }
+        else { isMoving = false; updateUI(); }
+    } else {
+        consecSixes = 0; nextTurn();
+    }
+}
+
+function endGameWithBotWin(dueToMiss = false) {
+    if(dueToMiss) {
+        alert(`❌ আপনি ৩ বার চাল মিস করেছেন।\n💔 ${currentBotName} জিতেছে!`);
+    } else {
+        alert(`💔 ${currentBotName} জিতেছে! বেটার লাক নেক্সট টাইম।`);
+    }
+    showMatchmakingPage();
+}
+
+function nextTurn() { ludoTurn = 1 - ludoTurn; isMoving = false; updateUI(); }
+
+function renderTokens() {
+    document.querySelectorAll('.puck:not(.pk-green):not(.pk-red)').forEach(e => e.remove()); 
+    document.querySelectorAll('#board > .cell .puck').forEach(e => e.remove());
+    document.querySelectorAll('#g-base .puck, #r-base .puck').forEach(e => e.remove());
+
+    renderPuck('green', p1Pos); renderPuck('red', p2Pos);
+}
+
+function renderPuck(color, pos) {
+    if(pos === 56) return;
+    let el = document.createElement('div'); el.className = `puck pk-${color}`;
+    let targetId = '';
+    
+    if(pos === -1) targetId = color === 'green' ? 'g-base' : 'r-base';
+    else if (pos < 51) {
+        let absPos = color === 'green' ? pos : (pos + 26) % 52;
+        targetId = `cell-${P[absPos][0]}-${P[absPos][1]}`;
+    } else {
+        let path = color === 'green' ? GH : RH;
+        targetId = `cell-${path[pos-51][0]}-${path[pos-51][1]}`;
+    }
+
+    let target = document.getElementById(targetId);
+    if(target) target.appendChild(el);
+}
+
+buildLudoBoard();
+
+</script>
+</body>
+</html>
